@@ -7,8 +7,8 @@ drain it flat.
 ## Install
 
 ```sh
-git clone https://github.com/babadamino/mac.git
-cd mac
+git clone https://github.com/babadamino/lidgo.git
+cd lidgo
 ./install.sh
 ```
 

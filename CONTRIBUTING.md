@@ -14,8 +14,8 @@ lidgo is a lightweight, single-purpose menu-bar app. Any proposed changes should
 No Xcode project — just the Command Line Tools:
 
 ```sh
-git clone https://github.com/babadamino/mac.git
-cd mac
+git clone https://github.com/babadamino/lidgo.git
+cd lidgo
 ./build.sh            # builds ./build/lidgo.app, ad-hoc signed
 open build/lidgo.app
 ```

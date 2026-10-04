@@ -30,9 +30,10 @@ build-provenance attestation. Two checks, both offline-friendly:
 # 1. Integrity: the bytes match what the release published.
 shasum -a 256 -c SHA256SUMS
 
-# 2. Provenance: this exact zip was built by lidgo's GitHub Actions release
+# 2. Provenance: these exact files were built by lidgo's GitHub Actions release
 #    workflow, from this repo, at the released commit (SLSA Build L2, Sigstore-signed).
-gh attestation verify lidgo-<version>.zip -R babadamino/mac
+gh attestation verify lidgo-<version>.zip -R babadamino/lidgo
+gh attestation verify lidgo-<version>.dmg -R babadamino/lidgo
 ```
 
 What each one proves:
@@ -54,8 +55,8 @@ The compile is deterministic for a given toolchain, so you can rebuild and compa
 **unsigned executable** byte for byte:
 
 ```sh
-git clone https://github.com/babadamino/mac.git
-cd mac && git checkout v<version>
+git clone https://github.com/babadamino/lidgo.git
+cd lidgo && git checkout v<version>
 
 # Rebuild the executable with the release's deployment target.
 swiftc -O -parse-as-library -target arm64-apple-macos13.0 \

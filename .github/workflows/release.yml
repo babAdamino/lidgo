@@ -1,9 +1,9 @@
 name: Release
 
 # Cut a release from a tag. Building on a GitHub-hosted runner, signing the build
-# provenance with Sigstore (SLSA Build L2), and publishing the zip + checksums means
-# anyone can verify the download came from this exact source, with no Apple account
-# involved. See docs/AUDIT.md for how to verify as a user.
+# provenance with Sigstore (SLSA Build L2), and publishing the zip + dmg +
+# checksums means anyone can verify the download came from this exact source,
+# with no Apple account involved. See docs/AUDIT.md for how to verify as a user.
 
 on:
   push:
@@ -57,15 +57,36 @@ jobs:
           echo "asset=$ASSET" >> "$GITHUB_OUTPUT"
           ls -la "$ASSET"
 
+      - name: Build the installer DMG
+        id: dmg
+        run: |
+          set -euo pipefail
+          DMG="lidgo-${{ steps.ver.outputs.version }}.dmg"
+          # Stage the app alongside a drag-to-Applications symlink, then image it.
+          STAGE="$PWD/dmg-stage"
+          rm -rf "$STAGE"
+          mkdir -p "$STAGE"
+          cp -R "dist/lidgo.app" "$STAGE/"
+          ln -s /Applications "$STAGE/Applications"
+          hdiutil create -volname "lidgo" -srcfolder "$STAGE" -ov -format UDZO "$DMG"
+          rm -rf "$STAGE"
+          echo "dmg=$DMG" >> "$GITHUB_OUTPUT"
+          ls -la "$DMG"
+
       - name: SHA-256 checksums
         run: |
           set -euo pipefail
-          shasum -a 256 "${{ steps.zip.outputs.asset }}" | tee SHA256SUMS
+          shasum -a 256 "${{ steps.zip.outputs.asset }}" "${{ steps.dmg.outputs.dmg }}" | tee SHA256SUMS
 
-      - name: Attest build provenance (SLSA)
+      - name: Attest build provenance (SLSA, zip)
         uses: actions/attest-build-provenance@v4
         with:
           subject-path: ${{ steps.zip.outputs.asset }}
+
+      - name: Attest build provenance (SLSA, dmg)
+        uses: actions/attest-build-provenance@v4
+        with:
+          subject-path: ${{ steps.dmg.outputs.dmg }}
 
       - name: Extract release notes from CHANGELOG
         run: |
@@ -84,6 +105,7 @@ jobs:
             echo '```sh'
             echo "shasum -a 256 -c SHA256SUMS"
             echo "gh attestation verify ${{ steps.zip.outputs.asset }} -R ${{ github.repository }}"
+            echo "gh attestation verify ${{ steps.dmg.outputs.dmg }} -R ${{ github.repository }}"
             echo '```'
             echo "See [docs/AUDIT.md](https://github.com/${{ github.repository }}/blob/main/docs/AUDIT.md) for what each check proves."
           } >> NOTES.md
@@ -96,11 +118,12 @@ jobs:
           set -euo pipefail
           TAG="${{ steps.ver.outputs.tag }}"
           ASSET="${{ steps.zip.outputs.asset }}"
+          DMG="${{ steps.dmg.outputs.dmg }}"
           if gh release view "$TAG" >/dev/null 2>&1; then
-            gh release upload "$TAG" "$ASSET" SHA256SUMS --clobber
+            gh release upload "$TAG" "$ASSET" "$DMG" SHA256SUMS --clobber
             gh release edit "$TAG" --notes-file NOTES.md --title "lidgo ${{ steps.ver.outputs.version }}"
           else
-            gh release create "$TAG" "$ASSET" SHA256SUMS \
+            gh release create "$TAG" "$ASSET" "$DMG" SHA256SUMS \
               --title "lidgo ${{ steps.ver.outputs.version }}" \
               --notes-file NOTES.md
           fi
