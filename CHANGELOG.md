@@ -13,3 +13,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - First release: menu-bar switch that keeps the Mac awake with the lid closed
   (via `pmset disablesleep`), with an auto-off timer, a battery-floor cutoff,
   Low Power Mode auto-off, and launch at login.
+- Green-cup app icon + matching menu-bar glyph, distributed as a drag-to-install
+  dmg with checksums on every release.

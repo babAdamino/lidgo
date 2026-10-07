@@ -16,7 +16,8 @@ echo "================="
 echo "==> Restoring normal sleep (disablesleep 0)"
 sudo -n /usr/bin/pmset -a disablesleep 0 2>/dev/null || sudo /usr/bin/pmset -a disablesleep 0 || true
 
-# 2. Quit the app + remove the login item.
+# 2. Quit the app + remove the login item (including the legacy LaunchAgent
+# that older install.sh versions wrote; the app now manages login via SMAppService).
 echo "==> Quitting app + removing login item"
 osascript -e "quit app \"$APP_NAME\"" 2>/dev/null || true
 launchctl bootout "gui/$(id -u)/$BUNDLE_ID" 2>/dev/null || true

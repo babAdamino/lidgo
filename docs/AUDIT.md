@@ -7,6 +7,15 @@ to verify a download you did not build.
 There is no Apple account behind any of this. Every check below is free and runs on your
 machine.
 
+## Reporting a vulnerability
+
+Do not open a public issue. On the
+[Security tab](https://github.com/babadamino/lidgo/security), choose
+**Advisories → Report a vulnerability** to open a private draft visible only to
+you and the maintainer. Include the exact macOS version, what you did, and what
+you expected. You will get a response, and the fix is credited in the release
+notes unless you prefer to stay anonymous.
+
 ## Read it in about ten minutes
 
 The whole app is one file. To satisfy yourself it does what it claims and nothing else:

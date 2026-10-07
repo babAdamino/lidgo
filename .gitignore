@@ -1,5 +1,6 @@
 # Build output
 build/
+dist/
 *.app/
 lidgo.iconset/
 
@@ -10,6 +11,9 @@ lidgo.iconset/
 
 # Release artifacts (built by build.sh / CI, attached to GitHub Releases)
 *.zip
+*.dmg
+SHA256SUMS
+NOTES.md
 
 # macOS cruft
 .DS_Store

@@ -20,8 +20,9 @@ cd lidgo
 open build/lidgo.app
 ```
 
-`./install.sh` additionally installs the passwordless grant + login item (it prints exactly
-what it writes). `./uninstall.sh` backs it all out and proves the grant is revoked.
+`./install.sh` additionally installs the passwordless grant (it prints exactly
+what it writes). Launch at login stays off — it is opt-in from the app's popover.
+`./uninstall.sh` backs it all out and proves the grant is revoked.
 
 ## Coding guidelines
 

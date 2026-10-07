@@ -1,10 +1,33 @@
 # lidgo
 
+[![CI](https://github.com/babAdamino/lidgo/actions/workflows/ci.yml/badge.svg)](https://github.com/babAdamino/lidgo/actions/workflows/ci.yml)
+[![latest release](https://img.shields.io/github/v/release/babAdamino/lidgo)](https://github.com/babAdamino/lidgo/releases/latest)
+
 Keep your MacBook awake with the lid closed, on battery, with no external display.
 One menu-bar switch, with an auto-off timer and a battery-floor cutoff so you never
 drain it flat.
 
 ## Install
+
+### From the dmg (easiest)
+
+Download the latest `lidgo-<version>.dmg` from
+[Releases](https://github.com/babAdamino/lidgo/releases/latest), open it, and drag
+lidgo into Applications. Then run the one-time grant so the app can toggle sleep
+without a password prompt:
+
+```sh
+/Applications/lidgo.app/Contents/Resources/grant.sh
+```
+
+Launch lidgo, click the menu-bar icon, flip Enable on, and close the lid.
+
+> lidgo is ad-hoc signed, not notarized (no paid Apple Developer account). On first
+> launch macOS will refuse to open it — right-click (or Control-click) the app,
+> choose **Open**, then **Open** again to allow it. To verify the download first:
+> `shasum -a 256 -c SHA256SUMS` (see [docs/AUDIT.md](docs/AUDIT.md)).
+
+### From source
 
 ```sh
 git clone https://github.com/babadamino/lidgo.git
