@@ -42,7 +42,7 @@ shasum -a 256 -c SHA256SUMS
 
 What it proves: the file was not altered after publishing. It says nothing
 about *who* built it. For the stronger link from "the source you can read"
-to "the binary you ran," rebuild from source below and compare — that is
+to "the binary you ran," rebuild from source below and compare. That is
 the check that needs no trust in the runner.
 
 ## Reproduce the build

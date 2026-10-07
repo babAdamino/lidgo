@@ -23,7 +23,7 @@ without a password prompt:
 Launch lidgo, click the menu-bar icon, flip Enable on, and close the lid.
 
 > lidgo is ad-hoc signed, not notarized (no paid Apple Developer account). On first
-> launch macOS will refuse to open it — right-click (or Control-click) the app,
+> launch macOS will refuse to open it. Right-click (or Control-click) the app,
 > choose **Open**, then **Open** again to allow it. To verify the download first:
 > `shasum -a 256 -c SHA256SUMS` (see [docs/AUDIT.md](docs/AUDIT.md)).
 
@@ -39,12 +39,12 @@ Then click the lidgo icon in the menu bar, flip Enable on, and close the lid.
 
 ## Features
 
-- **One switch** — flip Enable and the Mac stays awake with the lid closed.
-- **Auto-off timer** — 1h or 2h with a live countdown, then off.
-- **Battery floor** — auto-off at 5–50% on battery (default 15%).
-- **Low Power Mode** — steps aside when LPM is on, on battery.
-- **Launch at login** — optional, off by default, always starts idle.
-- **Tiny + native** — one AppKit file. No Dock icon, daemon, or kext.
+- **One switch**: flip Enable and the Mac stays awake with the lid closed.
+- **Auto-off timer**: 1h or 2h with a live countdown, then off.
+- **Battery floor**: auto-off at 5–50% on battery (default 15%).
+- **Low Power Mode**: steps aside when LPM is on, on battery.
+- **Launch at login**: optional, off by default, always starts idle.
+- **Tiny + native**: one AppKit file. No Dock icon, daemon, or kext.
 
 Menu-bar glyph: dimmed = off · full = awake · full + dot = awake on battery
 (auto-off live).
@@ -68,7 +68,7 @@ See [docs/AUDIT.md](docs/AUDIT.md).
 ./uninstall.sh
 ```
 
-Restores normal sleep, removes the app, login item, and sudoers grant — then
+Restores normal sleep, removes the app, login item, and sudoers grant, then
 proves the grant is gone.
 
 ## License

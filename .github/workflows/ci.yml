@@ -32,7 +32,7 @@ jobs:
             || { echo "::group::swiftc output"; cat build.log; echo "::endgroup::"; exit 1; }
           cat build.log
           if grep -q "warning:" build.log; then
-            echo "::error::swiftc emitted warnings — zero-warning gate failed"
+            echo "::error::swiftc emitted warnings: zero-warning gate failed"
             exit 1
           fi
           file /tmp/lidgo

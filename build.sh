@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# build.sh — compile lidgo.app from source with the Command Line Tools only.
+# build.sh: compile lidgo.app from source with the Command Line Tools only.
 #
 # No Xcode project, no Package.swift: just `swiftc` + a hand-assembled .app bundle,
 # ad-hoc signed. Works from any clone (no hardcoded paths or usernames).

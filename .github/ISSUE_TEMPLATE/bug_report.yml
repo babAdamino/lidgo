@@ -6,7 +6,7 @@ body:
     attributes:
       value: |
         Thanks for reporting. lidgo is verified on macOS 26 (Tahoe) / Apple Silicon;
-        behavior elsewhere isn't guaranteed because `disablesleep` is undocumented — please
+        behavior elsewhere isn't guaranteed because `disablesleep` is undocumented, so please
         include your versions below so we can tell drift from a real bug.
   - type: textarea
     id: what-happened
@@ -56,7 +56,7 @@ body:
       label: How did you install lidgo?
       options:
         - Built from source (build.sh / install.sh)
-        - Downloaded the release .zip
+        - Downloaded the release (.dmg / .zip)
     validations:
       required: true
   - type: textarea

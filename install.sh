@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
-# install.sh — build lidgo, install it to /Applications, and add the passwordless
+# install.sh: build lidgo, install it to /Applications, and add the passwordless
 # grant that lets it toggle lid-close sleep.
 #
 # This is the ONLY script that touches sudo. It tells you exactly what it will write
 # before it writes it. To back everything out, run ./uninstall.sh.
 #
-# Launch at login stays OFF by default — turn it on from the app's popover switch
+# Launch at login stays OFF by default. Turn it on from the app's popover switch
 # if you want it (the app manages it itself via SMAppService).
 set -euo pipefail
 
@@ -24,7 +24,7 @@ echo "     lid-close sleep without prompting. The grant (root:wheel, 0440) is EX
 echo ""
 echo "       $USER_NAME ALL=(root) NOPASSWD: /usr/bin/pmset -a disablesleep 0, /usr/bin/pmset -a disablesleep 1"
 echo ""
-echo "     That is the only thing it permits — turn lid-close sleep on or off. Nothing else."
+echo "     That is the only thing it permits: turn lid-close sleep on or off. Nothing else."
 echo ""
 read -r -p "Continue? [y/N] " reply
 case "$reply" in [yY]*) ;; *) echo "Aborted."; exit 1 ;; esac
@@ -41,6 +41,6 @@ echo "==> Installing passwordless grant (you'll be asked for your password once)
 open "$APP"
 
 echo ""
-echo "✅ Installed. The lidgo icon is in your menu bar — click it to toggle."
+echo "✅ Installed. The lidgo icon is in your menu bar. Click it to toggle."
 echo "   Turn ON, close the lid: your Mac stays awake on battery (auto-off at the floor you set)."
 echo "   To remove everything (including the grant): ./uninstall.sh"

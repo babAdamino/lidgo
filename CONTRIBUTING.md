@@ -4,14 +4,14 @@ lidgo is a lightweight, single-purpose menu-bar app. Any proposed changes should
 
 ## Ways to help
 
-- **Report a bug** — use the bug-report issue form. Include your exact macOS version
+- **Report a bug**: use the bug-report issue form. Include your exact macOS version
   (`sw_vers`), your Mac model (`sysctl -n hw.model`), and what `pmset -g | grep SleepDisabled`
   reports before/after the problem.
-- **Code** — bug fixes and small, focused improvements.
+- **Code**: bug fixes and small, focused improvements.
 
 ## Building locally
 
-No Xcode project — just the Command Line Tools:
+No Xcode project, just the Command Line Tools:
 
 ```sh
 git clone https://github.com/babadamino/lidgo.git
@@ -21,7 +21,7 @@ open build/lidgo.app
 ```
 
 `./install.sh` additionally installs the passwordless grant (it prints exactly
-what it writes). Launch at login stays off — it is opt-in from the app's popover.
+what it writes). Launch at login stays off; it is opt-in from the app's popover.
 `./uninstall.sh` backs it all out and proves the grant is revoked.
 
 ## Coding guidelines
@@ -33,7 +33,7 @@ what it writes). Launch at login stays off — it is opt-in from the app's popov
   swiftc -O -parse-as-library -framework AppKit App.swift -o /tmp/lidgo
   ```
   CI runs the equivalent compile on every push/PR.
-- **Match the surrounding style.** Read `App.swift` first — keep comment density, naming, and
+- **Match the surrounding style.** Read `App.swift` first and keep comment density, naming, and
   the "read back the real system state, never assume" discipline.
 - **No personal paths or usernames** in scripts, the sudoers template, or install commands.
   The grant is generated from `$(id -un)` at install time.

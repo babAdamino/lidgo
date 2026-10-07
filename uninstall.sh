@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# uninstall.sh — completely back lidgo out: restore normal sleep, remove the app,
+# uninstall.sh: completely back lidgo out: restore normal sleep, remove the app,
 # the login item, AND the passwordless grant. Ends by PROVING the privilege is gone.
 set -uo pipefail   # not -e: we want to attempt every cleanup step even if one is absent
 
@@ -27,7 +27,7 @@ rm -f "$LAUNCH_AGENT"
 echo "==> Removing $APP"
 rm -rf "$APP"
 
-# 4. Remove the passwordless grant (password required, by design — you're touching sudo).
+# 4. Remove the passwordless grant (password required; by design, you're touching sudo).
 echo "==> Removing passwordless grant (you may be asked for your password)"
 sudo rm -f "$SUDOERS_DST"
 sudo visudo -c >/dev/null && echo "    sudoers still parses cleanly"
@@ -36,7 +36,7 @@ sudo visudo -c >/dev/null && echo "    sudoers still parses cleanly"
 echo "==> Verifying the grant is gone"
 sudo -k
 if sudo -n /usr/bin/pmset -a disablesleep 0 2>/dev/null; then
-  echo "    ⚠️  unexpected: pmset still ran without a password — check $SUDOERS_DST"
+  echo "    ⚠️  unexpected: pmset still ran without a password; check $SUDOERS_DST"
 else
   echo "    ✅ revoked: 'sudo -n pmset …' now requires a password again."
 fi

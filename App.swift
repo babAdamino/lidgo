@@ -19,12 +19,12 @@
 //
 // Three small, fail-safe features layer on top, none of which adds a daemon or
 // persists OS state (so "reboot resets it" still holds):
-//   1. Auto-off timer (1h / 2h) — a one-shot in-memory Timer that flips sleep back
+//   1. Auto-off timer (1h / 2h): a one-shot in-memory Timer that flips sleep back
 //      on when it fires. Dies on quit; nothing survives a reboot.
-//   2. Launch at login (SMAppService.mainApp) — OFF by default. The app always
+//   2. Launch at login (SMAppService.mainApp), OFF by default. The app always
 //      launches reading the TRUE system state, so a login launch can never
 //      re-enable disablesleep on its own.
-//   3. Low-Power-Mode auto-off — on battery, if Low Power Mode is on, lidgo
+//   3. Low-Power-Mode auto-off: on battery, if Low Power Mode is on, lidgo
 //      turns itself off. Same shape as the battery floor, evaluated on the same tick.
 //
 // Build: Command Line Tools `swiftc`, NO Xcode project.
@@ -43,7 +43,7 @@ private let floorDefault = 15
 private let floorMin = 5
 private let floorMax = 50
 
-// MARK: - Menu-bar icon (custom lidgo glyph, MONOCHROME template — state by EMPHASIS)
+// MARK: - Menu-bar icon (custom lidgo glyph, MONOCHROME template, state by EMPHASIS)
 // macOS convention: a menu-bar extra is a template image (no colour) so it adapts to
 // light/dark bars and inverts on highlight. The source is menubaricon.png in the app
 // bundle (black-on-transparent, shipped by build.sh); it is normalised to 18 pt so a
@@ -200,7 +200,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         let swW = swProto.width > 0 ? swProto.width : 38
         let swH = swProto.height > 0 ? swProto.height : 21
 
-        // GROUP 1 — Enable switch on top, auto-off timer below it, one card.
+        // GROUP 1: Enable switch on top, auto-off timer below it, one card.
         let g1y: CGFloat = 16, g1h: CGFloat = 136
         let g1 = makeCard(NSRect(x: pad, y: g1y, width: contentW, height: g1h))
         mainCard = g1
@@ -237,7 +237,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         countdownLabel.frame = NSRect(x: ci, y: ci + 96, width: cw, height: 16)
         g1.addSubview(countdownLabel)
 
-        // GROUP 3 — battery-floor (label + value + slider + min/max hints)
+        // GROUP 3: battery-floor (label + value + slider + min/max hints)
         let g3y = g1y + g1h + 12, g3h: CGFloat = 92
         let g3 = makeCard(NSRect(x: pad, y: g3y, width: contentW, height: g3h))
         let floorLabel = makeLabel("Auto-off at low battery", font: .systemFont(ofSize: 13), color: .labelColor)
@@ -261,7 +261,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         maxHint.frame = NSRect(x: contentW - ci - 34, y: ci + 50, width: 34, height: 13)
         g3.addSubview(maxHint)
 
-        // GROUP 4 — launch at login (off by default; never auto-enables sleep prevention)
+        // GROUP 4: launch at login (off by default; never auto-enables sleep prevention)
         let g4y = g3y + g3h + 12, g4h: CGFloat = 46
         let g4 = makeCard(NSRect(x: pad, y: g4y, width: contentW, height: g4h))
         let loginLabel = makeLabel("Launch at login", font: .systemFont(ofSize: 13), color: .labelColor)
@@ -274,7 +274,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         loginSwitch.frame = NSRect(x: contentW - ci - swW, y: ci + (22 - swH) / 2, width: swW, height: swH)
         g4.addSubview(loginSwitch)
 
-        // Footer — Quit (separated by space, not a hairline)
+        // Footer: Quit (separated by space, not a hairline)
         let quit = NSButton(title: "Quit lidgo", target: self, action: #selector(quit))
         quit.controlSize = .regular
         quit.bezelStyle = .rounded
@@ -334,14 +334,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     // must act (the passwordless grant is missing and setup did not complete) so the caller can
     // reflect OFF. The decision to prompt is made on the REAL sudo result (see setDisableSleep),
     // never by re-reading SleepDisabled: a successful sudo means the command ran, even if a
-    // safety net (Low Power Mode / battery floor) legitimately turns sleep back on afterwards —
+    // safety net (Low Power Mode / battery floor) legitimately turns sleep back on afterwards:
     // which must NOT be mistaken for "permission missing" and trigger a password prompt. This
     // unobservable, state-proxy decision is what made earlier releases re-prompt spuriously.
     @discardableResult
     private func performToggle(wantOn: Bool) -> Bool {
         var result = setDisableSleep(wantOn)
         // Only a genuinely MISSING grant warrants the one-time native-auth setup. A successful
-        // sudo (.ok) — or any other failure — never re-prompts here.
+        // sudo (.ok), or any other failure, never re-prompts here.
         if wantOn, result == .grantMissing {
             if installGrantViaAuth() { result = setDisableSleep(true) }
             if result != .ok {
@@ -357,7 +357,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     // Install the one-time scoped grant via a SINGLE native macOS authorization (the
-    // standard Touch ID / password sheet) — no Terminal. Runs the bundled, audited
+    // standard Touch ID / password sheet), no Terminal. Runs the bundled, audited
     // grant.sh as root through osascript's "with administrator privileges"; grant.sh is
     // root-aware so it writes the sudoers drop-in directly with no inner sudo prompt.
     // Returns true once the passwordless grant is in place; after that the app never asks again.
@@ -467,7 +467,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         countdownLabel?.stringValue = "Auto-off in \(t)"
     }
 
-    // MARK: - Launch at login (Feature 2) — OFF by default; never re-enables sleep prevention
+    // MARK: - Launch at login (Feature 2), OFF by default; never re-enables sleep prevention
     @objc private func loginToggled(_ sender: NSSwitch) {
         do {
             if sender.state == .on { try SMAppService.mainApp.register() }
@@ -534,7 +534,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         renderText()
     }
 
-    // Result of the privileged keep-awake toggle, based on sudo's REAL exit status — not on a
+    // Result of the privileged keep-awake toggle, based on sudo's REAL exit status, not on a
     // second, independent state read. `.ok` = the command ran; `.grantMissing` = the passwordless
     // sudoers grant isn't installed (sudo -n refused), the one case that warrants setup; `.failed`
     // = any other error. Using sudo's own result (instead of re-reading SleepDisabled) is the fix:
@@ -587,7 +587,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                 String(data: errData, encoding: .utf8) ?? "")
     }
 
-    // MARK: - Battery + Low-Power-Mode safety nets (silent; no extra UI) — Feature 3
+    // MARK: - Battery + Low-Power-Mode safety nets (silent; no extra UI; Feature 3)
     private func enforceSafetyNets() {
         let (onBattery, discharging, percent) = batteryStatus()
         guard onBattery, discharging else { return }

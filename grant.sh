@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# grant.sh — install ONLY the passwordless grant that lets lidgo toggle lid-close
+# grant.sh: install ONLY the passwordless grant that lets lidgo toggle lid-close
 # sleep without a prompt. Self-contained: works from a clone OR from inside the app
 # bundle (Contents/Resources), so Homebrew-cask users can run it after install.
 #
