@@ -23,31 +23,18 @@ it, and `sudo rm` it any time to revoke everything.
 
 ## Verify a release you downloaded (did not build)
 
-Release zips are built on a GitHub-hosted runner, checksummed, and signed with a Sigstore
-build-provenance attestation. Two checks, both offline-friendly:
+Releases are built on a GitHub-hosted runner and published with checksums.
+One check, offline-friendly:
 
 ```sh
-# 1. Integrity: the bytes match what the release published.
+# Integrity: the bytes match what the release published.
 shasum -a 256 -c SHA256SUMS
-
-# 2. Provenance: these exact files were built by lidgo's GitHub Actions release
-#    workflow, from this repo, at the released commit (SLSA Build L2, Sigstore-signed).
-gh attestation verify lidgo-<version>.zip -R babadamino/lidgo
-gh attestation verify lidgo-<version>.dmg -R babadamino/lidgo
 ```
 
-What each one proves:
-
-- **`shasum -c`** proves the file was not altered after publishing. It says nothing about
-  *who* built it, so it is necessary but not sufficient on its own.
-- **`gh attestation verify`** proves the file came out of this project's release workflow
-  (a specific repository + commit + workflow), cryptographically, with no shared secret to
-  leak. This is the strong link from "the source you can read" to "the binary you ran." It
-  needs the GitHub CLI (`brew install gh`); the attestation itself lives in this repo and on
-  the public Sigstore transparency log.
-
-Neither check is Gatekeeper. macOS still treats the prebuilt app as unnotarized. The point of these
-two is supply-chain trust: that the download is the thing this repository built.
+What it proves: the file was not altered after publishing. It says nothing
+about *who* built it. For the stronger link from "the source you can read"
+to "the binary you ran," rebuild from source below and compare — that is
+the check that needs no trust in the runner.
 
 ## Reproduce the build
 
@@ -77,8 +64,8 @@ Caveats, stated honestly:
   non-deterministic data, so compare the unsigned Mach-O above, not the signed bundle. See
   the [Reproducible Builds definition](https://reproducible-builds.org/docs/definition/).
 
-For most people the attestation is the easier and stronger guarantee; reproducing the build
-is the deepest check if you want it.
+For most people the checksum + a source rebuild is the practical guarantee;
+reproducing the build is the deepest check if you want it.
 
 ## Scan it with VirusTotal
 
@@ -95,7 +82,7 @@ curl -s --request POST --url https://www.virustotal.com/api/v3/files \
 
 Note: ad-hoc-signed, unnotarized binaries draw more *heuristic* flags than notarized ones, so
 read any detection in context. A clean result is reassuring, not absolute; pair it with the
-attestation above.
+checksum + rebuild above.
 
 ## Notarization (planned, not yet done)
 

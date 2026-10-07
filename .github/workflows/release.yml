@@ -1,9 +1,8 @@
 name: Release
 
-# Cut a release from a tag. Building on a GitHub-hosted runner, signing the build
-# provenance with Sigstore (SLSA Build L2), and publishing the zip + dmg +
-# checksums means anyone can verify the download came from this exact source,
-# with no Apple account involved. See docs/AUDIT.md for how to verify as a user.
+# Cut a release from a tag. Building on a GitHub-hosted runner and publishing
+# the zip + dmg + checksums means anyone can verify the download with shasum
+# or rebuild from source. No Apple account involved. See docs/AUDIT.md.
 
 on:
   push:
@@ -16,12 +15,10 @@ on:
 
 permissions:
   contents: write       # create the release + upload assets
-  id-token: write       # Sigstore OIDC, required by attest-build-provenance
-  attestations: write   # write the build-provenance attestation to this repo
 
 jobs:
   release:
-    name: Build, attest, and publish
+    name: Build and publish
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
@@ -78,16 +75,6 @@ jobs:
           set -euo pipefail
           shasum -a 256 "${{ steps.zip.outputs.asset }}" "${{ steps.dmg.outputs.dmg }}" | tee SHA256SUMS
 
-      - name: Attest build provenance (SLSA, zip)
-        uses: actions/attest-build-provenance@v4
-        with:
-          subject-path: ${{ steps.zip.outputs.asset }}
-
-      - name: Attest build provenance (SLSA, dmg)
-        uses: actions/attest-build-provenance@v4
-        with:
-          subject-path: ${{ steps.dmg.outputs.dmg }}
-
       - name: Extract release notes from CHANGELOG
         run: |
           set -euo pipefail
@@ -104,8 +91,6 @@ jobs:
             echo "### Verify this download"
             echo '```sh'
             echo "shasum -a 256 -c SHA256SUMS"
-            echo "gh attestation verify ${{ steps.zip.outputs.asset }} -R ${{ github.repository }}"
-            echo "gh attestation verify ${{ steps.dmg.outputs.dmg }} -R ${{ github.repository }}"
             echo '```'
             echo "See [docs/AUDIT.md](https://github.com/${{ github.repository }}/blob/main/docs/AUDIT.md) for what each check proves."
           } >> NOTES.md
