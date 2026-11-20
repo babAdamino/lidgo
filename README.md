@@ -1,6 +1,5 @@
 # lidgo
 
-[![CI](https://github.com/babAdamino/lidgo/actions/workflows/ci.yml/badge.svg)](https://github.com/babAdamino/lidgo/actions/workflows/ci.yml)
 [![latest release](https://img.shields.io/github/v/release/babAdamino/lidgo)](https://github.com/babAdamino/lidgo/releases/latest)
 
 Keep your MacBook awake with the lid closed, on battery, with no external display.
