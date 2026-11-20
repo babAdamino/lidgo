@@ -38,7 +38,7 @@ what it writes). Launch at login stays off; it is opt-in from the app's popover.
 - **No personal paths or usernames** in scripts, the sudoers template, or install commands.
   The grant is generated from `$(id -un)` at install time.
 - **Verify on a real machine.** lidgo is verified on macOS 26 (Tahoe) / Apple Silicon.
-  If you test on other versions/hardware, say so in the PR.
+  If you test on other versions/hardware, please say so in the PR.
 
 ## Pull requests
 
